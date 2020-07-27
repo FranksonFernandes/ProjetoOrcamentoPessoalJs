@@ -7,6 +7,22 @@ class Despesa{
         this.descricao = descricao
         this.valor = valor
     }
+
+    validaDados(){
+        //Percorre os atributos e valores dos objetos
+        for(let i in this){
+            
+        //Verifica se estão vazios, nulos ou indefinidos:
+            if(this[i]== undefined || this[i]== '' || this[i]==null){
+                
+                return false
+            }
+           console.log(i, this[i])
+         }
+            return true 
+        
+    }
+
 }
 
 class Bd{
@@ -50,10 +66,21 @@ function cadastrarDespesa(){
         ano.value, 
         mes.value, 
         dia.value, 
+        tipo.value,
         descricao.value, 
         valor.value
         )
 
-        bd.gravar(despesa)
+        if(despesa.validaDados()){
+             bd.gravar(despesa)
+            
+            //dialog de sucesso
+             $('#sucessoGravacao').modal('show')
+        } else{
+            //dialog de erro
+            $('#erroGravacao').modal('show')
+            
+        }
+        
 }
 
