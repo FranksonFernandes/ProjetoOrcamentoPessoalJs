@@ -47,6 +47,25 @@ class Bd{
 
 
        }
+       recuperarTodosRegistros(){
+           let despesas = Array() 
+
+           let id = localStorage.getItem('id')
+        //Recuperar todas as despesas cadastradas em local storage:
+           for(let i =1; i<=id;i++){
+               //recuperar a despesa
+            let despesa = JSON.parse(localStorage.getItem(i)) 
+            //verificar indices  que foram pulados/removidos
+            //Se houver, será pulado:
+            if(despesa === null){
+                continue
+            }
+
+            despesas.push(despesa)
+        }
+        return despesas
+       }
+
 }
 
 let bd = new Bd()
@@ -91,5 +110,42 @@ function cadastrarDespesa(){
             
         }
         
+}
+
+function carregaListaDespesas(){
+    let despesas = Array()
+    despesas = bd.recuperarTodosRegistros()
+    //selecionando o elementi tbody da tabela:
+    let listaDespesas = document.getElementById('listaDespesas')
+
+    //percorrer o array despesas, listando cada despesa de forma dinamica:
+    despesas.forEach(function(d){
+
+        //criando a linha (tr)
+        let linha = listaDespesas.insertRow()
+        //criar as colunas (td)
+        linha.insertCell(0).innerHTML =`${d.dia}/${d.mes}/${d.ano}`//tratando a coluna de data (dd/mm/yyyy)
+        
+        //Ajustar o TIPO:
+        switch(d.tipo){
+            case '1': d.tipo = 'Alimentação'
+                break
+            case '2': d.tipo = 'Educação'
+                break    
+            case '3': d.tipo = 'Lazer'
+                break        
+            case '4': d.tipo = 'Saúde'
+                break            
+            case '5': d.tipo = 'Transporte'
+                break            
+        }
+        linha.insertCell(1).innerHTML = d.tipo
+        linha.insertCell(2).innerHTML = d.descricao
+        if(d.valor===undefined){
+            d.valor='0,00'
+        }
+        linha.insertCell(3).innerHTML = d.valor
+    })
+
 }
 
